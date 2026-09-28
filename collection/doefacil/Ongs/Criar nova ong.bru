@@ -1,0 +1,31 @@
+meta {
+  name: Criar nova ong
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8082/ongs
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nome": "De mulher para mulher",
+    "area_autacao": "social",
+    "cnpj": "70386172000120",
+    "cep": "01014-000",
+    "senha": "12345",
+    "confirmacao_senha": "12345",
+    "email": "demulher@gmail.org.br",
+    "telefone": "1724578981",
+    "responsavel": "judas iscariotes",
+    "cpf": "26909565002"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,162 @@
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem); /* (min, ideal, máx) */
+  font-weight: 400;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 500;
+}
+
+h3 {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-weight: 700;
+}
+
+h5 {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-weight: 800;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  color: #1E293B;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@media (max-width: 500px) {
+  .p-toast {
+    width: 18rem;
+  }
+}
+
+.p-inputtext,
+.p-inputnumber {
+  width: 100% !important;
+}
+
+.view {
+  min-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url(../assets/img/fundoProjeto.jpg);
+  background-position: center; /* Centraliza  */
+  background-size: cover; /* Ajusta o tamanho da imagem de fundo para cobrir todo o conteiner */
+  background-repeat: no-repeat; /* Impede que a imagem se repita */
+  background-attachment: fixed; /* Fixa a imagem mesmo quando rola */
+}
+
+.container {
+  font-size: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 4rem;
+}
+
+.glass {
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 2.5rem;
+  backdrop-filter: blur(25px);
+}
+
+input[type="date"] {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-size: 1rem;
+  color: var(--p-inputtext-color);
+  background: var(--p-inputtext-background);
+  padding-block: var(--p-inputtext-padding-y);
+  padding-inline: var(--p-inputtext-padding-x);
+  border: 1px solid var(--p-inputtext-border-color);
+  transition: background var(--p-inputtext-transition-duration),
+    color var(--p-inputtext-transition-duration),
+    border-color var(--p-inputtext-transition-duration),
+    outline-color var(--p-inputtext-transition-duration),
+    box-shadow var(--p-inputtext-transition-duration);
+  appearance: none;
+  border-radius: var(--p-inputtext-border-radius);
+  outline-color: transparent;
+  box-shadow: var(--p-inputtext-shadow);
+
+  &:hover {
+    border-color: darkgrey;
+  }
+
+  &:focus {
+    border-color: var(--p-inputtext-focus-border-color);
+    box-shadow: var(--p-inputtext-focus-ring-shadow);
+    outline: var(--p-inputtext-focus-ring-width)
+      var(--p-inputtext-focus-ring-style) var(--p-inputtext-focus-ring-color);
+    outline-offset: var(--p-inputtext-focus-ring-offset);
+  }
+}
+
+.p-datatable {
+  background-color: white;
+  padding: 1%;
+  border-radius: 1.25rem !important;
+}
+
+.surgir {
+  animation: surgir 1s linear alternate;
+}
+
+@keyframes surgir {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+*::-webkit-scrollbar {
+  width: 12px; /* Largura da barra de rolagem */
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #f0f0f0; /* Cor interna do thumb */
+  border: 2px solid #c9c9c9; /* Borda ao redor do thumb */
+  border-radius: 8px; /* Borda arredondada */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--p-primary-200);
+  border: 2px solid var(--p-primary-200);
+}
+
+*::-webkit-scrollbar-track {
+  background: #ffffff; /* Cor do fundo */
+  border-radius: 0px; /* Borda arredondada do track */
+}

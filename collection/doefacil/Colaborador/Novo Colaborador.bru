@@ -1,0 +1,27 @@
+meta {
+  name: Novo Colaborador
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8081/Colaboradores
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nome": "Jose Bento",
+    "cpf": "65363200856",
+    "email": "JoseBento99@gmail.com",
+    "telefone": "1629626082",
+    "cargo": "Assistente",
+    "idEndereco": 1,
+    "idOng": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+}

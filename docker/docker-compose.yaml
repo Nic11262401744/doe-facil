@@ -1,0 +1,72 @@
+services:
+
+  db_doe_facil:
+    image: postgres:15.3-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: devUser
+      POSTGRES_PASSWORD: devPass
+      POSTGRES_DB: doeFacil
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+            - spring-cloud-network
+
+  colaboradores_srv:
+    container_name: colaboradores_srv
+    environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
+      SPRING_DATASOURCE_USERNAME: devUser
+      SPRING_DATASOURCE_PASSWORD: devPass
+    build:
+      context: ../colaboradores/.
+      dockerfile: Dockerfile
+    ports: 
+      - "8081:8081"
+    networks:
+            - spring-cloud-network
+    depends_on: 
+      - db_doe_facil
+
+  ongs_srv:
+    container_name: ongs_srv
+    environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
+      SPRING_DATASOURCE_USERNAME: devUser
+      SPRING_DATASOURCE_PASSWORD: devPass
+    build:
+      context: ../ongs/.
+      dockerfile: Dockerfile
+    ports: 
+      - "8082:8082"
+    networks:
+            - spring-cloud-network
+    depends_on: 
+      - db_doe_facil
+
+  doacao_srv:
+    container_name: doacao_srv
+    environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
+      SPRING_DATASOURCE_USERNAME: devUser
+      SPRING_DATASOURCE_PASSWORD: devPass
+    build:
+      context: ../doacao/.
+      dockerfile: Dockerfile
+    ports: 
+      - "8083:8083"
+    networks:
+            - spring-cloud-network
+    depends_on: 
+      - db_doe_facil
+
+networks:
+    spring-cloud-network:
+        driver: bridge
+
+volumes:
+  pgdata:

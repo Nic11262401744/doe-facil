@@ -1,0 +1,23 @@
+meta {
+  name: Login
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8082/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "cnpj": "70386172000120",
+    "senha": "12345"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

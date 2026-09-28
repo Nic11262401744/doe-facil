@@ -1,0 +1,19 @@
+meta {
+  name: buscar Endereco
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8081/endereco?cep=01014-000
+  body: none
+  auth: inherit
+}
+
+params:query {
+  cep: 01014-000
+}
+
+settings {
+  encodeUrl: true
+}

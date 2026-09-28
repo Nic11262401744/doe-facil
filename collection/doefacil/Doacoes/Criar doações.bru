@@ -1,0 +1,28 @@
+meta {
+  name: Criar doações
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8083/doacao
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "tipo": "FINANCEIRA",
+    "descricao": "doacao de 200 reais",
+    "valor": 200,
+    "data_doacao": "06/10/2025",
+    "doador": "Josefina aragão de cordoba",
+    "colaborador_nome": "Caroline Sandra Andrea das Neves",
+    "ong_id": "1"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
