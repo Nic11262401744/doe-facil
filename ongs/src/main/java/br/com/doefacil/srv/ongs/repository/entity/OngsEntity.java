@@ -1,6 +1,7 @@
 package br.com.doefacil.srv.ongs.repository.entity;
 
 import jakarta.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "ongs")
@@ -29,9 +30,16 @@ public class OngsEntity {
     private String reponsavel;
     @Column
     private String cpf;
+    @Column(name = "termos_versao", nullable = false)
+    private String termosVersao;
+    @Column(name = "privacidade_versao", nullable = false)
+    private String privacidadeVersao;
+    @Column(name = "consentimento_em", nullable = false)
+    private Instant consentimentoEm;
 
     public OngsEntity(String nome, String cnpj, String email, String telefone, String area_atuacao, String senha,
-                      EnderecoEntity endereco, String responsavel, String cpf) {
+                      EnderecoEntity endereco, String responsavel, String cpf, String termosVersao,
+                      String privacidadeVersao, Instant consentimentoEm) {
         this.nome = nome;
         this.cnpj = cnpj;
         this.email = email;
@@ -41,6 +49,9 @@ public class OngsEntity {
         this.endereco = endereco;
         this.reponsavel = responsavel;
         this.cpf = cpf;
+        this.termosVersao = termosVersao;
+        this.privacidadeVersao = privacidadeVersao;
+        this.consentimentoEm = consentimentoEm;
     }
 
     @Deprecated
@@ -81,5 +92,13 @@ public class OngsEntity {
 
     public String getReponsavel() {
         return reponsavel;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

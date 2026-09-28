@@ -14,7 +14,8 @@ WORKDIR /ongs
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean install package 
+RUN mvn clean install package
+# RUN mvn clean -U install -DskipTests
 
 EXPOSE 8082
 

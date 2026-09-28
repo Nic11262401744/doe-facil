@@ -10,6 +10,8 @@ import java.util.ArrayList;
 @Repository
 public interface DoacaoRepository extends JpaRepository<DoacaoEntity, Long> {
 
+    java.util.Optional<DoacaoEntity> findByIdAndOng_Id(Long id, Long ongId);
+
     @Query(value = "SELECT d.* FROM doacoes d WHERE d.ong_id=?1",
             nativeQuery = true)
     ArrayList<DoacaoEntity> seachDoacoesByOngId(Long ongId);

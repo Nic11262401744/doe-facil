@@ -5,6 +5,9 @@ import Logout from '@/views/Logout.vue'
 import DoacaoView from '@/views/DoacaoView.vue'
 import HomeView from '@/views/HomeView.vue'
 import ColaboradoresView from '@/views/ColaboradoresView.vue'
+import TermsView from '@/views/TermsView.vue'
+import PrivacyView from '@/views/PrivacyView.vue'
+import { getToken, isTokenExpired, removeToken } from '@/token'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +16,16 @@ const router = createRouter({
       path: '/',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/termos',
+      name: 'termos',
+      component: TermsView
+    },
+    {
+      path: '/privacidade',
+      name: 'privacidade',
+      component: PrivacyView
     },
     // {
     //   path: '/admin',
@@ -46,6 +59,15 @@ const router = createRouter({
     },
 
   ]
+})
+
+router.beforeEach((to) => {
+  if (['/', '/termos', '/privacidade'].includes(to.path)) return true
+  if (getToken() && !isTokenExpired()) return true
+
+  removeToken()
+  localStorage.removeItem('idOng')
+  return { name: 'login' }
 })
 
 export default router

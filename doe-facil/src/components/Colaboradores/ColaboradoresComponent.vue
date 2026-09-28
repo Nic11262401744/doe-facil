@@ -88,7 +88,7 @@
 import { Button, FloatLabel, InputText, Dialog } from 'primevue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from "axios";
+import { api, apiUrls } from "@/plugins/axios";
 
 const router = useRouter();
 
@@ -97,7 +97,7 @@ const telaAtual = ref<'historico' | 'opcoes'>('historico');
 
 // controle do Dialog
 const idOng = localStorage.getItem('idOng');
-const endpoint = 'http://localhost:8081/Colaboradores';
+const endpoint = `${apiUrls.colaboradores}/Colaboradores`;
 executarBuscaColaborador();
 const mostrarDialog = ref(false);
 const colaboradorSelecionado = ref<any>(null);
@@ -127,7 +127,7 @@ function adicionarColaborador() {
     //     ...novoColaborador.value
     // });
 
-    axios.post(endpoint, 
+    api.post(endpoint, 
         {
             "nome": novoColaborador.value.nome,
             "cpf": novoColaborador.value.Documento,
@@ -160,7 +160,7 @@ telaAtual.value = 'historico';
 
 function executarBuscaColaborador() {
 
-    axios.get(endpoint + "/byOng/" + idOng)
+    api.get(endpoint + "/byOng/" + idOng)
         .then(function (response) {
             console.log(response.data)
             colaboradores.value = response.data

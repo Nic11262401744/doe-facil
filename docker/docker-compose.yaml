@@ -16,6 +16,7 @@ services:
   colaboradores_srv:
     container_name: colaboradores_srv
     environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
       SPRING_DATASOURCE_USERNAME: devUser
       SPRING_DATASOURCE_PASSWORD: devPass
@@ -32,6 +33,7 @@ services:
   ongs_srv:
     container_name: ongs_srv
     environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
       SPRING_DATASOURCE_USERNAME: devUser
       SPRING_DATASOURCE_PASSWORD: devPass
@@ -48,6 +50,7 @@ services:
   doacao_srv:
     container_name: doacao_srv
     environment:  
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:-ZG9lLWZhY2lsLWxvY2FsLWRldmVsb3BtZW50LWtleS0zMi1ieXRlIQ==}
       SPRING_DATASOURCE_URL: jdbc:postgresql://db_doe_facil:5432/doeFacil
       SPRING_DATASOURCE_USERNAME: devUser
       SPRING_DATASOURCE_PASSWORD: devPass

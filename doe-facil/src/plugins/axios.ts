@@ -1,12 +1,13 @@
-import { pegarAuthorization } from "@/token/index";
 import { getToken, removeToken } from "@/token";
 import axios from "axios";
 
-export const apiURL = "http://rotaaqui"; // exemplo: https://apibackend.com.br
+export const apiUrls = {
+  ongs: import.meta.env.VITE_ONGS_API_URL || "http://localhost:8082",
+  colaboradores: import.meta.env.VITE_COLABORADORES_API_URL || "http://localhost:8081",
+  doacoes: import.meta.env.VITE_DOACOES_API_URL || "http://localhost:8083",
+};
 
-export const api = axios.create({
-  baseURL: apiURL,
-});
+export const api = axios.create();
 
 api.interceptors.request.use(
   (config) => {
@@ -24,12 +25,13 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    pegarAuthorization(response);
     return response;
   },
   (error) => {
     if (error.response?.status === 401) {
       removeToken();
+      localStorage.removeItem("Expiration");
+      localStorage.removeItem("idOng");
       window.location.href = "/";
     }
     return Promise.reject(error);

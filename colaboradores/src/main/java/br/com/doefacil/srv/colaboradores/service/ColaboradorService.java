@@ -24,7 +24,7 @@ public class ColaboradorService implements IColaboradorService {
     }
 
     @Override
-    public void creatColaborador(ColaboradorReqDto colaborador) {
+    public void creatColaborador(ColaboradorReqDto colaborador, Long ongId) {
 
         repository.save(
                 new ColaboradorEntity(
@@ -33,7 +33,7 @@ public class ColaboradorService implements IColaboradorService {
                     colaborador.email(),
                     colaborador.telefone(),
                     colaborador.cargo(),
-                    ongService.findById(colaborador.idOng().longValue())
+                    ongService.findById(ongId)
                 )
         );
     }

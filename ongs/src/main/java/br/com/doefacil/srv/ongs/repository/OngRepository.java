@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface OngRepository extends JpaRepository<OngsEntity, Long> {
-    Optional<OngsEntity> findByCnpjAndSenha(String cnpj, String senha);
+    Optional<OngsEntity> findByCnpj(String cnpj);
 }

@@ -11,6 +11,8 @@ public interface IOngsService {
 
     OngsEntity findById(Long id);
 
+    EnderecoCep consultarCep(String cep);
+
     LoginRespDto login(LoginDtoReq req);
 
 }

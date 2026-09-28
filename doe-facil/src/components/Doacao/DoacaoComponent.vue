@@ -138,12 +138,12 @@ import { Button, Checkbox, FloatLabel, InputNumber, InputText } from 'primevue';
 import { ref, type Ref } from "vue";
 import { useRouter } from 'vue-router';
 import { useToast } from "primevue/usetoast";
-import axios from "axios";
+import { api, apiUrls } from "@/plugins/axios";
 
 const toast = useToast();
 const router = useRouter();
 
-const endpoint = 'http://localhost:8083/doacao';
+const endpoint = `${apiUrls.doacoes}/doacao`;
 const doacaoBem: Ref<string> = ref("");
 const descricao: Ref<string> = ref("");
 const quantidade: Ref<number> = ref(0);
@@ -168,7 +168,7 @@ const executarDoacaoMonetaria = async () => {
 
     let doadorAno = nomeDoador.value == "" ? "Anônimo" : nomeDoador.value
 
-    const response = await axios.post(endpoint, {
+    const response = await api.post(endpoint, {
       tipo: "FINANCEIRA",
       descricao: `${maneiraDoa.value} - valor:R$ ${valor.value} - recebido por: ${nomeColaborador.value}`,
       valor: valor.value,
@@ -204,7 +204,7 @@ const executarDoacaoBem = async () => {
 
     let doadorAno = nomeDoador.value == "" ? "Anônimo" : nomeDoador.value
 
-    const response = await axios.post(endpoint, {
+    const response = await api.post(endpoint, {
       tipo: "PRODUTO",
       descricao: `produto: ${doacaoBem.value} - quantidade: ${quantidade.value} - recebido por: ${nomeColaborador.value}`,
       valor: null,
@@ -238,7 +238,7 @@ const executarDoacaoBem = async () => {
 
 async function executarBuscaDoacoes() {
   try {
-    const response = await axios.get(`${endpoint}/byOng/${idOng}`);
+    const response = await api.get(`${endpoint}/byOng/${idOng}`);
     doacoes.value = response.data;
   } catch (error) {
     console.error(error);

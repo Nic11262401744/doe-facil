@@ -1,6 +1,8 @@
 package br.com.doefacil.srv.ongs.controller.dto.req;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 
 public record OngReqDto(
         @NotBlank
@@ -12,6 +14,9 @@ public record OngReqDto(
         @NotBlank
         String cep,
         @NotBlank
+        String numero,
+        String complemento,
+        @NotBlank
         String senha,
         @NotBlank
         String confirmacao_senha,
@@ -22,6 +27,8 @@ public record OngReqDto(
         @NotBlank
         String responsavel,
         @NotBlank
-        String cpf
+        String cpf,
+        @NotNull @AssertTrue Boolean aceiteTermos,
+        @NotNull @AssertTrue Boolean aceitePrivacidade
 ){
 }

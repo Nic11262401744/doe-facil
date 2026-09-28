@@ -25,9 +25,8 @@ public class DoeacaoService implements IDoeacaoService {
     }
 
     @Override
-    public void createDoacao(DoacaoRequestDto req) {
+    public void createDoacao(DoacaoRequestDto req, Long ongId) {
 
-        Long idOng = Long.parseLong(req.ong_id());
         LocalDate date = LocalDate.parse(req.data_doacao(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
         doacaoRepository.save(
@@ -37,15 +36,15 @@ public class DoeacaoService implements IDoeacaoService {
                         req.valor(),
                         date,
                         req.doador(),
-                        colaboradorRepository.findByNome(req.colaborador_nome()).orElseThrow(),
-                        ongRepository.findById(idOng).orElseThrow()
+                        colaboradorRepository.findByNomeAndOng_Id(req.colaborador_nome(), ongId).orElseThrow(),
+                        ongRepository.findById(ongId).orElseThrow()
                 )
         );
     }
 
     @Override
-    public DoacaoEntity findDoacao(Long id) {
-        return doacaoRepository.findById(id).orElseThrow();
+    public DoacaoEntity findDoacao(Long id, Long ongId) {
+        return doacaoRepository.findByIdAndOng_Id(id, ongId).orElseThrow();
     }
 
     @Override

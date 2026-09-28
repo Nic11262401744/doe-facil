@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ColaboradorRepository extends JpaRepository<ColaboradorEntity, Long> {
     Optional<ColaboradorEntity> findByNome(@NotBlank String nome);
+    Optional<ColaboradorEntity> findByNomeAndOng_Id(String nome, Long ongId);
 }

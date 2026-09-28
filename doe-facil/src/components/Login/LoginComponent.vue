@@ -57,9 +57,21 @@
             <label>CPNJ</label>
           </FloatLabel>
 
+          <div class="flex flex-col gap-2">
+            <FloatLabel variant="on">
+              <InputMask v-model="ruaOng" mask="99999-999" />
+              <label>CEP</label>
+            </FloatLabel>
+            <Button label="Consultar CEP" icon="pi pi-map-marker" severity="secondary" @click="consultarCep" />
+            <small v-if="enderecoConsultado">{{ enderecoConsultado }}</small>
+          </div>
           <FloatLabel variant="on">
-            <InputText v-model="ruaOng" />
-            <label>CEP</label>
+            <InputText v-model="numeroEndereco" />
+            <label>Número</label>
+          </FloatLabel>
+          <FloatLabel variant="on">
+            <InputText v-model="complementoEndereco" />
+            <label>Complemento (opcional)</label>
           </FloatLabel>
 
 
@@ -99,10 +111,18 @@
             <label>CPF</label>
           </FloatLabel>
 
+          <div class="flex items-start gap-2 text-sm">
+            <Checkbox v-model="aceiteLegal" inputId="aceite-legal" binary />
+            <label for="aceite-legal">
+              Li e aceito os <a href="/termos" target="_blank" rel="noopener">Termos de Uso</a> e a
+              <a href="/privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
+            </label>
+          </div>
+
           <div class="flex gap-10">
             <Button label="VOLTAR" class="!rounded-3xl" icon="pi pi-chevron-left"
               @click="proximaEtapa = false, cadastro = true" />
-            <Button label="CADASTRAR" class="!bg-[var(--p-primary-950)] !rounded-3xl" icon="pi pi-plus"
+            <Button label="CADASTRAR" :disabled="!aceiteLegal" class="!bg-[var(--p-primary-950)] !rounded-3xl" icon="pi pi-plus"
               @click="cadastrar" />
           </div>
 
@@ -134,10 +154,10 @@ import Button from "primevue/button";
 import { onMounted, ref, type Ref } from "vue";
 import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast";
-import { Dialog, FloatLabel, InputMask, InputText } from "primevue";
+import { Checkbox, Dialog, FloatLabel, InputMask, InputText } from "primevue";
 import { tituloProjeto } from "@/utils";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import { api, apiUrls } from "@/plugins/axios";
 
 const toast = useToast();
 const router = useRouter();
@@ -163,13 +183,28 @@ const confirSenhaOng: Ref<string> = ref("");
 const ruaOng: Ref<string> = ref("");
 const nomeResponsavel: Ref<string> = ref("");
 const cpf: Ref<string> = ref("");
+const aceiteLegal = ref(false);
+const numeroEndereco: Ref<string> = ref("");
+const complementoEndereco: Ref<string> = ref("");
+const enderecoConsultado: Ref<string> = ref("");
+
+const consultarCep = async () => {
+  try {
+    const cep = ruaOng.value.replace(/\D/g, "");
+    const response = await api.get(`${apiUrls.ongs}/ongs/cep/${cep}`);
+    enderecoConsultado.value = [response.data.logradouro, response.data.localidade, response.data.uf]
+      .filter(Boolean).join(" - ");
+  } catch {
+    enderecoConsultado.value = "CEP não localizado. Confira o número e tente novamente.";
+  }
+};
 
 
 const entrar = async () => {
 
   const cnpjRMask = username.value.replace(/[^\d]/g, "")
 
-  axios.post('http://localhost:8082/login', {
+  api.post(`${apiUrls.ongs}/login`, {
     cnpj: cnpjRMask,
     senha: password.value
   }).then(function (response) {
@@ -177,11 +212,13 @@ const entrar = async () => {
     if (response.status === 200) {
       login.value = true;
       localStorage.setItem('idOng', response.data.idOng)
+      localStorage.setItem('Token', response.data.token)
+      localStorage.setItem('Expiration', String(Date.now() + response.data.expiresIn * 1000))
       router.push("/home");
     }
   }).catch(function (error) {
     console.log(error)
-    if (error.status === 401) {
+    if (error.response?.status === 401) {
       toast.add({ severity: 'error', summary: 'Erro ao tentar executar o login', detail: 'Verifique se a senha e cnpj estão corretos.', life: 3000 });
     }
   });
@@ -189,17 +226,21 @@ const entrar = async () => {
 
 const cadastrar = async () => {
   try {
-    await axios.post('http://localhost:8082/ongs', {
+    await api.post(`${apiUrls.ongs}/ongs`, {
       nome: nomeOng.value,
       area_autacao: objetivoOng.value,
       cnpj: cnpjOng.value.replace(/[^\d]/g, ""),
-      cep: ruaOng.value.replace(/[^\d]/g, ""),
+      cep: ruaOng.value.replace(/\D/g, ""),
+      numero: numeroEndereco.value,
+      complemento: complementoEndereco.value,
       senha: senhaOng.value,
       confirmacao_senha: confirSenhaOng.value,
       email: emailOng.value,
       telefone: telefoneOng.value.replace(/[^\d]/g, ""),
       responsavel: nomeResponsavel.value,
-      cpf: cpf.value.replace(/[^\d]/g, "")
+      cpf: cpf.value.replace(/[^\d]/g, ""),
+      aceiteTermos: aceiteLegal.value,
+      aceitePrivacidade: aceiteLegal.value
     });
 
     toast.add({
@@ -209,7 +250,11 @@ const cadastrar = async () => {
       life: 3000
     });
 
-    router.push("/home");
+    username.value = cnpjOng.value;
+    login.value = true;
+    cadastro.value = false;
+    proximaEtapa.value = false;
+    aceiteLegal.value = false;
   } catch (error) {
     toast.add({
       severity: "error",
@@ -220,9 +265,10 @@ const cadastrar = async () => {
   }
   finally {
     setTimeout(() => {
-      login.value = false
-      cadastro.value = false
-      proximaEtapa.value = false
+      if (!login.value) {
+        cadastro.value = false
+        proximaEtapa.value = false
+      }
     }, 3250);
   }
 };

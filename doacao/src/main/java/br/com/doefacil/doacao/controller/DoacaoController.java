@@ -7,7 +7,10 @@ import br.com.doefacil.doacao.service.IDoeacaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 
@@ -24,13 +27,13 @@ public class DoacaoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    void criarDoacao(@RequestBody @Valid DoacaoRequestDto requestDto) {
-        service.createDoacao(requestDto);
+    void criarDoacao(@RequestBody @Valid DoacaoRequestDto requestDto, @AuthenticationPrincipal Jwt jwt) {
+        service.createDoacao(requestDto, Long.valueOf(jwt.getClaimAsString("ongId")));
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<DoacaoDtoResp> findDoacao(@PathVariable("id") Long id) {
-        DoacaoEntity doacao = service.findDoacao(id);
+    ResponseEntity<DoacaoDtoResp> findDoacao(@PathVariable("id") Long id, @AuthenticationPrincipal Jwt jwt) {
+        DoacaoEntity doacao = service.findDoacao(id, Long.valueOf(jwt.getClaimAsString("ongId")));
         return ResponseEntity.ok(new DoacaoDtoResp(
                 doacao.getId(),
                 doacao.getTipo(),
@@ -44,8 +47,12 @@ public class DoacaoController {
     }
 
     @GetMapping("/byOng/{id}")
-    ResponseEntity<ArrayList<DoacaoDtoResp>> findDoacoesByOng(@PathVariable("id") Long idOng) {
-        ArrayList<DoacaoEntity> doacao = service.findDoacoes(idOng);
+    ResponseEntity<ArrayList<DoacaoDtoResp>> findDoacoesByOng(@PathVariable("id") Long idOng, @AuthenticationPrincipal Jwt jwt) {
+        Long ongIdToken = Long.valueOf(jwt.getClaimAsString("ongId"));
+        if (!idOng.equals(ongIdToken)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso restrito à ONG autenticada");
+        }
+        ArrayList<DoacaoEntity> doacao = service.findDoacoes(ongIdToken);
         ArrayList<DoacaoDtoResp> res = new ArrayList();
 
         doacao.forEach(doacaoEntity -> {

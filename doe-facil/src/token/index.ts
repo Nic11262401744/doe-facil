@@ -4,7 +4,8 @@ export function getToken(): string | null {
 }
 
 export function removeToken() {
-  return localStorage.removeItem("Token");
+  localStorage.removeItem("Token");
+  localStorage.removeItem("Expiration");
 }
 
 export function isTokenExpired(): boolean {
@@ -14,25 +15,10 @@ export function isTokenExpired(): boolean {
     return true;
   }
   const expirationTimestamp = parseInt(expirationString, 10);
-  const expirationDate = new Date(expirationTimestamp);
-  const currenteDate = new Date();
-
-  if (expirationDate >= currenteDate) {
-    return true;
-  }
-
-  return false;
+  return !Number.isFinite(expirationTimestamp) || Date.now() >= expirationTimestamp;
 }
 
 // export function getUserID(): string | null {
 //     return localStorage.getItem("UnitID")
 // }
 
-export const pegarAuthorization = (response: any) => {
-  const authorizationHeader = response.headers?.authorization || response.headers?.Authorization;
-
-  if (authorizationHeader && authorizationHeader.startsWith("Bearer")) {
-    const token = authorizationHeader.replace(/^Bearer\s+/i, "");
-    localStorage.setItem("Token", token);
-  }
-};

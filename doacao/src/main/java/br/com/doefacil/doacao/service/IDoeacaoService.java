@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public interface IDoeacaoService {
 
-    void createDoacao(DoacaoRequestDto req);
+    void createDoacao(DoacaoRequestDto req, Long ongId);
 
-    DoacaoEntity findDoacao(Long id);
+    DoacaoEntity findDoacao(Long id, Long ongId);
 
     ArrayList<DoacaoEntity> findDoacoes(Long idOng);
 }
