@@ -220,7 +220,3 @@ Para contribuir com o projeto:
 2. Faça suas alterações
 3. Teste o fluxo localmente
 4. Abra um pull request
-
----
-
-Se quiser, posso também criar uma versão em português mais enxuta ou incluir comandos específicos de teste para cada microserviço.
